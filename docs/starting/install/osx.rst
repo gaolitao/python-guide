@@ -1,125 +1,133 @@
 .. _install-osx:
 
-Installing Python on Mac OS X
-=============================
 
-The latest version of Mac OS X, Lion, **comes with Python 2.7 out of the box**.
+###############################
+Installing Python 2 on Mac OS X
+###############################
 
-You do not need to install or configure anything else to use Python. Having
-said that, I would strongly recommend that you install the tools and libraries
-described in the next section before you start building Python applications
-for real-world use. In particular, you should always install Distribute, as it
-makes it much easier for you to use other third-party Python libraries.
+.. image:: /_static/photos/34435688560_4cc2a7bcbb_k_d.jpg
+
+.. note::
+    Check out our :ref:`guide for installing Python 3 on OS X<install3-osx>`.
+
+**Mac OS X comes with Python 2.7 out of the box.**
+
+You do not need to install or configure anything else to use Python. Having said
+that, I would strongly recommend that you install the tools and libraries
+described in the next section before you start building Python applications for
+real-world use. In particular, you should always install Setuptools, as it makes
+it much easier for you to install and manage other third-party Python libraries.
 
 The version of Python that ships with OS X is great for learning, but it's not
-good for development. It's slightly out of date, and Apple has made significant
-changes that can cause hidden bugs.
+good for development. The version shipped with OS X may be out of date from the
+`official current Python release <https://www.python.org/downloads/mac-osx/>`_,
+which is considered the stable production version.
 
+
+**************
 Doing it Right
---------------
+**************
 
 Let's install a real version of Python.
 
-First, you'll need to have GCC installed to compile Python. You can either get
-this from `XCode <http://developer.apple.com/xcode/>`_ or the smaller
-`OSX-GCC-Installer <https://github.com/kennethreitz/osx-gcc-installer#readme>`_ package.
+Before installing Python, you'll need to install a C compiler. The fastest way
+is to install the Xcode Command Line Tools by running
+``xcode-select --install``. You can also download the full version of
+`Xcode <https://developer.apple.com/xcode/>`_ from the Mac App Store, or the
+minimal but unofficial
+`OSX-GCC-Installer <https://github.com/kennethreitz/osx-gcc-installer#readme>`_
+package.
 
-While Lion comes with a large number of UNIX utilities, those familiar with
+.. note::
+    If you already have Xcode installed, do not install OSX-GCC-Installer.
+    In combination, the software can cause issues that are difficult to
+    diagnose.
+
+.. note::
+    If you perform a fresh install of Xcode, you will also need to add the
+    commandline tools by running ``xcode-select --install`` on the terminal.
+
+
+While OS X comes with a large number of Unix utilities, those familiar with
 Linux systems will notice one key component missing: a decent package manager.
-`Homebrew <http://mxcl.github.com/homebrew/>`_ fills this void.
+`Homebrew <https://brew.sh>`_ fills this void.
 
-To `install Homebrew <https://github.com/mxcl/homebrew/wiki/installation>`_,
-simply run
-
-.. code-block:: console
-
-    $ ruby -e "$(curl -fsSkL raw.github.com/mxcl/homebrew/go)"
-
-Then, insert the Homebrew directory at the top of your ``PATH`` environment
-variable. You can do this by adding the following line at the bottom of your
-``~/.bashrc`` file
+To `install Homebrew <https://brew.sh/#install>`_, open :file:`Terminal` or
+your favorite OS X terminal emulator and run
 
 .. code-block:: console
 
-    export PATH=/usr/local/bin:$PATH
+    $ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
-Now, we can install Python 2.7: ::
-
-    $ brew install python --framework
-
-This will take a minute or two. Once that's complete, you'll have to add the
-new Python scripts directory to your ``PATH``
-
-.. code-block:: console
-
-    export PATH=/usr/local/share/python:$PATH
-
-The ``--framework`` option tells Homebrew to compile a Framework-style Python
-build, rather than a UNIX-style build. The outdated version of Python that
-Snow Leopard comes packaged with is built as a Framework, so this helps avoid
-some future module installation bugs.
-
-
-Distribute & Pip
-----------------
-
-The most crucial third-party Python software of all is Distribute, which
-extends the packaging and installation facilities provided by the distutils
-in the standard library. Once you add Distribute to your Python system you can
-download and install any compliant Python software product with a single
-command. It also enables you to add this network installation capability to
-your own Python software with very little work.
-
-Homebrew already installed Distribute for you. Its ``easy_install`` command is
-considered by many to be deprecated, so we will install its replacement:
-**pip**. Pip allows for uninstallation of packages, and is actively maintained,
-unlike easy_install.
-
-To install pip, simply open a command prompt and run
+The script will explain what changes it will make and prompt you before the
+installation begins.
+Once you've installed Homebrew, insert the Homebrew directory at the top
+of your :envvar:`PATH` environment variable. You can do this by adding the following
+line at the bottom of your :file:`~/.profile` file
 
 .. code-block:: console
 
-    $ easy_install pip
+    export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 
-
-Virtualenv
-----------
-
-After Distribute & Pip, the next development tool that you should install is
-`virtualenv <http://pypi.python.org/pypi/virtualenv/>`_. Use pip
+Now, we can install Python 2.7:
 
 .. code-block:: console
 
-    $ pip install virtualenv
+    $ brew install python@2
 
-The virtualenv kit provides the ability to create virtual Python environments
-that do not interfere with either each other, or the main Python installation.
-If you install virtualenv before you begin coding then you can get into the
-habit of using it to create completely clean Python environments for each
-project. This is particularly important for Web development, where each
-framework and application will have many dependencies.
-
-To set up a new Python environment, change the working directory to where ever
-you want to store the environment, and run the virtualenv utility in your
-project's directory
+Because ``python@2`` is a "keg", we need to update our ``PATH`` again, to point at our new installation:
 
 .. code-block:: console
 
-    $ virtualenv --distribute venv
+    export PATH="/usr/local/opt/python@2/libexec/bin:$PATH"
 
-To use an environment, run ``source venv/bin/activate``. Your command prompt
-will change to show the active environment. Once you have finished working in
-the current virtual environment, run ``deactivate`` to restore your settings
-to normal.
+Homebrew names the executable ``python2`` so that you can still run the system Python via the executable ``python``.
 
-Each new environment automatically includes a copy of ``pip``, so that you can
-setup the third-party libraries and tools that you want to use in that
-environment. Put your own code within a subdirectory of the environment,
-however you wish. When you no longer need a particular environment, simply
-copy your code out of it, and then delete the main directory for the environment.
 
+.. code-block:: console
+
+    $ python -V   # Homebrew installed Python 3 interpreter (if installed)
+    $ python2 -V  # Homebrew installed Python 2 interpreter
+    $ python3 -V  # Homebrew installed Python 3 interpreter (if installed)
+
+
+****************
+Setuptools & Pip
+****************
+
+Homebrew installs Setuptools and ``pip`` for you.
+
+Setuptools enables you to download and install any compliant Python
+software over a network (usually the Internet) with a single command
+(``easy_install``). It also enables you to add this network installation
+capability to your own Python software with very little work.
+
+``pip`` is a tool for easily installing and managing Python packages,
+that is recommended over ``easy_install``. It is superior to ``easy_install``
+in `several ways <https://python-packaging-user-guide.readthedocs.io/pip_easy_install/#pip-vs-easy-install>`_,
+and is actively maintained.
+
+.. code-block:: console
+
+    $ pip2 -V  # pip pointing to the Homebrew installed Python 2 interpreter
+    $ pip -V  # pip pointing to the Homebrew installed Python 3 interpreter (if installed)
+
+
+********************
+Virtual Environments
+********************
+
+A Virtual Environment (commonly referred to as a 'virtualenv') is a tool to keep the dependencies required by different projects
+in separate places, by creating virtual Python environments for them. It solves the
+"Project X depends on version 1.x but, Project Y needs 4.x" dilemma, and keeps
+your global site-packages directory clean and manageable.
+
+For example, you can work on a project which requires Django 1.10 while also
+maintaining a project which requires Django 1.8.
+
+To start using this and see more information: :ref:`Virtual Environments <virtualenvironments-ref>` docs.
 
 --------------------------------
 
-This page is a remixed version of `another guide <http://www.stuartellis.eu/articles/python-development-windows/>`_,
+This page is a remixed version of `another guide <https://www.stuartellis.name/articles/python-development-windows/>`_,
 which is available under the same license.
